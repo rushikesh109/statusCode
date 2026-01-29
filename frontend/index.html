@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HTTP Status Code Tester</title>
+  <style>
+    body { font-family: Arial; padding: 40px; }
+    button { padding: 10px 16px; margin: 6px; }
+    #output { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h2>HTTP Status Code Playground</h2>
+
+  <button onclick="handleRequest(400)">400</button>
+  <button onclick="handleRequest(401)">401</button>
+  <button onclick="handleRequest(403)">403</button>
+  <button onclick="handleRequest(404)">404</button>
+  <button onclick="handleRequest(405, 'POST')">405</button>
+  <button onclick="handleRequest(409)">409</button>
+  <button onclick="handleRequest(429)">429</button>
+
+  <div id="output"></div>
+
+  <script>
+    const output = document.getElementById("output");
+
+    async function handleRequest(code, method = "GET") {
+      output.textContent = "Loading...";
+
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/status/${code}`,
+          { method }
+        );
+
+        const data = await response.json();
+
+        console.log("STATUS:", response.status);
+        console.log("DATA:", data);
+
+        output.textContent = `${response.status} - ${data.message}`;
+      } catch (error) {
+        console.error("NETWORK ERROR:", error);
+        output.textContent = "Network error. Server might be down.";
+      }
+    }
+  </script>
+
+</body>
+</html>
